@@ -6,11 +6,11 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Cấu hình
+--
 local espEnabled = false
 local aimbotEnabled = false
-local BOX_COLOR = Color3.fromRGB(0, 255, 0) -- Xanh lá cho Box
-local TRACER_COLOR = Color3.fromRGB(255, 255, 255) -- Trắng cho đường kẻ
+local BOX_COLOR = Color3.fromRGB(0, 0, 0) -- Xanh lá cho Box
+local TRACER_COLOR = Color3.fromRGB(0, 0, 0) -- Trắng cho đường kẻ
 local AIM_PART = "Head"
 
 -- Bảng lưu trữ các đường kẻ để quản lý
