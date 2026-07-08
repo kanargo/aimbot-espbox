@@ -6,17 +6,14 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
---
 local espEnabled = false
 local aimbotEnabled = false
-local BOX_COLOR = Color3.fromRGB(0, 0, 0) -- Xanh lá cho Box
-local TRACER_COLOR = Color3.fromRGB(0, 0, 0) -- Trắng cho đường kẻ
+local BOX_COLOR = Color3.fromRGB(0, 0, 0)
+local TRACER_COLOR = Color3.fromRGB(0, 0, 0)
 local AIM_PART = "Head"
 
--- Bảng lưu trữ các đường kẻ để quản lý
 local Tracers = {}
 
--- Hàm gửi thông báo
 local function sendNotification(title, message, duration)
 	StarterGui:SetCore("SendNotification", {
 		Title = title,
@@ -25,13 +22,11 @@ local function sendNotification(title, message, duration)
 	})
 end
 
--- Thông báo khởi chạy
 task.spawn(function()
 	task.wait(1)
 	sendNotification("We love Argo <3", "Press U to use ESP/Hold E to use Aimbot", 10)
 end)
 
--- === HÀM TẠO ĐƯỜNG KẺ (TRACERS) ===
 local function createTracer(player)
 	local line = Drawing.new("Line")
 	line.Visible = false
@@ -41,9 +36,8 @@ local function createTracer(player)
 	Tracers[player] = line
 end
 
--- === PHẦN ESP BOX ===
 local function createBox(player)
-    createTracer(player) -- Tạo thêm tracer cho mỗi player
+    createTracer(player)
 	local function onCharacterAdded(character)
 		local hrp = character:WaitForChild("HumanoidRootPart", 10)
 		if not hrp then return end
@@ -70,7 +64,6 @@ local function createBox(player)
 	if player.Character then onCharacterAdded(player.Character) end
 end
 
--- Khởi tạo ban đầu
 for _, player in ipairs(Players:GetPlayers()) do
 	if player ~= LocalPlayer then createBox(player) end
 end
@@ -82,9 +75,7 @@ Players.PlayerRemoving:Connect(function(player)
 	end
 end)
 
--- === VÒNG LẶP CẬP NHẬT (RENDERSTEPPED) ===
 RunService.RenderStepped:Connect(function()
-	-- Xử lý Aimbot
 	if aimbotEnabled then
 		local closest = nil
 		local dist = math.huge
@@ -103,14 +94,13 @@ RunService.RenderStepped:Connect(function()
 		end
 	end
 
-	-- Xử lý Tracers (Mấy cái que)
 	for player, line in pairs(Tracers) do
 		if espEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
 			local hrp = player.Character.HumanoidRootPart
 			local vector, onScreen = Camera:WorldToViewportPoint(hrp.Position)
 
 			if onScreen then
-				line.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y) -- Gốc từ dưới giữa màn hình
+				line.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y) 
 				line.To = Vector2.new(vector.X, vector.Y)
 				line.Visible = true
 			else
@@ -122,12 +112,10 @@ RunService.RenderStepped:Connect(function()
 	end
 end)
 
--- === ĐIỀU KHIỂN PHÍM BẤM ===
 UserInputService.InputBegan:Connect(function(input, gpe)
 	if gpe then return end
 	if input.KeyCode == Enum.KeyCode.U then
 		espEnabled = not espEnabled
-		-- Bật tắt Box
 		for _, p in ipairs(Players:GetPlayers()) do
 			if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
 				local gui = p.Character.HumanoidRootPart:FindFirstChild("ArgoBoxESP")
